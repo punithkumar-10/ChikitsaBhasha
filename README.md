@@ -1,3 +1,3 @@
 # multi-agent-app
 
-my multi agent app
+multi agent app
