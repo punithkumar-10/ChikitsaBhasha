@@ -5,7 +5,9 @@ from agents.flashcard.agent import flashcard_agent
 from agents.note_formatter.agent import note_formatter_agent
 from agents.quiz_generator.agent import quiz_generator_agent
 from agents.assessment.agent import assessment_agent
+from agents.progress_tracker.agent import progress_tracker_agent
 from agents.search.agent import search_agent
+# ... other imports ...
 
 coordinator_agent = LlmAgent(
     name='coordinator_agent',
@@ -25,13 +27,9 @@ Available sub-agents:
 4. Note Formatter Agent: Formats notes into structured formats.
 5. Quiz Generator Agent: Creates quizzes based on the material.
 6. Assessment Agent: Evaluates quiz results and provides feedback.
-7. Search Agent: Retrieves information using Google's search capabilities.
-
-Guidelines:
-- For each user query, first engage the Intent Understanding Agent to ascertain the user's intent and learning needs.
-- Based on the identified intent and assessment, delegate the task to the corresponding specialized agent.
-- Maintain context throughout the interaction to provide personalized assistance.
-- If a query falls outside the scope of available agents, respond appropriately or seek clarification.
+7. Progress Tracker Agent: Monitors and analyzes student progress over time.
+8. Search Agent: Retrieves relevant information to assist in learning.
+# ... other agents ...
 """,
     sub_agents=[
         intent_understanding_agent,
@@ -40,6 +38,8 @@ Guidelines:
         note_formatter_agent,
         quiz_generator_agent,
         assessment_agent,
-        search_agent
+        progress_tracker_agent,
+        search_agent,
+        # ... other agents ...
     ]
 )

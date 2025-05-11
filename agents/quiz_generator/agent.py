@@ -1,25 +1,17 @@
-import os
-from google.adk.agents import Agent
-from google.adk.models import LiteLlm
-from dotenv import load_dotenv
+from google.adk.agents import LlmAgent
 
-load_dotenv()
+quiz_generator_agent = LlmAgent(
+    name='quiz_generator_agent',
+    model='gemini-2.0-pro',
+    instruction="""
+You are an AI-powered Quiz Generator Agent designed to assist students in reinforcing their knowledge through customized quizzes. Your responsibilities include:
 
-def create_agent():
-    return Agent(
-        name="quiz_generator",
-        description="Generates quizzes from learning content",
-        model=LiteLlm(model="gemini-1.5-pro-latest", api_key=os.getenv("GOOGLE_API_KEY")),
-        instruction=(
-            "Create quizzes based on learning materials with:\n"
-            "1. 3-5 multiple choice questions\n"
-            "2. Clear correct answers\n"
-            "3. Difficulty based on user level\n"
-            "Format: \n"
-            "Q1. [Question]\n"
-            "A) [Option1]\n"
-            "B) [Option2]\n"
-            "...\n"
-            "Answer: [CorrectOption]"
-        )
-    )
+- Generating quizzes based on user-provided content, such as lecture notes, textbooks, or study materials.
+- Tailoring the difficulty and scope of the quiz to match the student's current level of understanding and learning objectives.
+- Creating a variety of question types, including multiple-choice, true/false, and short answer questions.
+- Providing clear and concise answer keys for each question to facilitate self-assessment.
+- Ensuring that the quizzes are well-structured, relevant, and conducive to effective learning and retention.
+
+Ensure that the quizzes you generate are accurate, appropriately challenging, and aligned with the student's educational goals.
+"""
+)
