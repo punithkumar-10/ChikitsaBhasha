@@ -1,6 +1,4 @@
-google-adk>=0.5.0
-streamlit>=1.30.0
-python-dotenv>=1.0.0
-aiohttp>=3.9.0
-uvicorn>=0.25.0
-fastapi>=0.109.0
+google-adk
+google-cloud-aiplatform
+streamlit
+python-dotenv

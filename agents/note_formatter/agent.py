@@ -1,32 +1,17 @@
-import os
-import aiohttp
-from google.adk.agents import Agent
-from google.adk.tools import Tool
-from dotenv import load_dotenv
+from google.adk.agents import LlmAgent
 
-load_dotenv()
+note_formatter_agent = LlmAgent(
+    name='note_formatter_agent',
+    model='gemini-2.0-pro',
+    instruction="""
+You are an AI-powered Note Formatter Agent designed to assist students in organizing and structuring their study notes effectively. Your responsibilities include:
 
-class MarkdownTool(Tool):
-    name = "markdown_formatter"
-    description = "Formats content as Markdown"
+- Transforming unstructured or semi-structured notes into clear, organized formats such as bullet points, outlines, or categorized sections.
+- Highlighting key concepts, definitions, and important information to aid in quick revision.
+- Ensuring consistency in formatting to enhance readability and comprehension.
+- Tailoring the formatting style based on the subject matter and the student's preferences or requirements.
+- Providing suggestions for improving note-taking strategies and organization.
 
-    async def __call__(self, content: str):
-        # Simple markdown formatting (can be replaced with API call if needed)
-        return {
-            "formatted": f"# Study Notes\n\n{content.replace('\n', '\n\n')}",
-            "download_link": "notes.md"  # Simulated download link
-        }
-
-def create_agent():
-    return Agent(
-        name="note_formatter",
-        description="Formats learning content as Markdown notes",
-        model="gemini-1.5-flash-latest",
-        instruction=(
-            "Convert content into well-structured Markdown:\n"
-            "1. Use headings and bullet points\n"
-            "2. Highlight key concepts\n"
-            "3. Generate downloadable .md file"
-        ),
-        tools=[MarkdownTool()]
-    )
+Ensure that the formatted notes are accurate, logically structured, and conducive to effective learning and retention.
+"""
+)

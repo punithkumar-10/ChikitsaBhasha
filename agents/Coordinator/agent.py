@@ -32,8 +32,7 @@ Guidelines:
 - Based on the identified intent and assessment, delegate the task to the corresponding specialized agent.
 - Maintain context throughout the interaction to provide personalized assistance.
 - If a query falls outside the scope of available agents, respond appropriately or seek clarification.
-"""
-    ,
+""",
     sub_agents=[
         intent_understanding_agent,
         explainer_agent,
