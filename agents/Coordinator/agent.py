@@ -1,35 +1,46 @@
-import os
-from google.adk.agents import Agent
-from google.adk.models import LiteLlm
-from dotenv import load_dotenv
+from google.adk.agents import LlmAgent
+from agents.intent_understanding.agent import intent_understanding_agent
+from agents.explainer.agent import explainer_agent
+from agents.flashcard.agent import flashcard_agent
+from agents.note_formatter.agent import note_formatter_agent
+from agents.quiz_generator.agent import quiz_generator_agent
+from agents.assessment.agent import assessment_agent
+from agents.search.agent import search_agent
 
-load_dotenv()
+coordinator_agent = LlmAgent(
+    name='coordinator_agent',
+    model='gemini-2.0-pro',
+    instruction="""
+You are the central orchestrator of an AI-powered tutoring system. Your responsibilities include:
 
-def create_coordinator_agent():
-    # Initialize all sub-agents
-    from agents.content_uploader.agent import create_agent as create_content_uploader
-    from agents.explainer.agent import create_agent as create_explainer
-    from agents.quiz_generator.agent import create_agent as create_quiz_generator
-    from agents.flashcard.agent import create_agent as create_flashcard_agent
-    from agents.note_formatter.agent import create_agent as create_note_formatter
+- Utilizing the Intent Understanding Agent to analyze user queries, determine their underlying intent, and assess the student's comprehension and learning needs.
+- Routing the request to the appropriate specialized agent based on the identified intent and the student's profile.
+- Managing the flow of information between agents.
+- Ensuring that responses are cohesive, contextually relevant, and tailored to the student's learning requirements.
 
-    return Agent(
-        name="ai_tutor_coordinator",
-        description="Orchestrates all tutoring activities",
-        model=LiteLlm(model="gemini-1.5-pro-latest", api_key=os.getenv("GOOGLE_API_KEY")),
-        instruction=(
-            "Route user requests to appropriate sub-agents:\n"
-            "1. File uploads → ContentUploader\n"
-            "2. Explanations → Explainer\n"
-            "3. Quizzes → QuizGenerator\n"
-            "4. Flashcards → FlashcardAgent\n"
-            "5. Notes → NoteFormatter"
-        ),
-        sub_agents=[
-            create_content_uploader(),
-            create_explainer(),
-            create_quiz_generator(),
-            create_flashcard_agent(),
-            create_note_formatter()
-        ]
-    )
+Available sub-agents:
+1. Intent Understanding Agent: Determines the user's intent and assesses their learning needs.
+2. Explainer Agent: Provides detailed explanations on topics.
+3. Flashcard Agent: Generates flashcards for study purposes.
+4. Note Formatter Agent: Formats notes into structured formats.
+5. Quiz Generator Agent: Creates quizzes based on the material.
+6. Assessment Agent: Evaluates quiz results and provides feedback.
+7. Search Agent: Retrieves information using Google's search capabilities.
+
+Guidelines:
+- For each user query, first engage the Intent Understanding Agent to ascertain the user's intent and learning needs.
+- Based on the identified intent and assessment, delegate the task to the corresponding specialized agent.
+- Maintain context throughout the interaction to provide personalized assistance.
+- If a query falls outside the scope of available agents, respond appropriately or seek clarification.
+"""
+    ,
+    sub_agents=[
+        intent_understanding_agent,
+        explainer_agent,
+        flashcard_agent,
+        note_formatter_agent,
+        quiz_generator_agent,
+        assessment_agent,
+        search_agent
+    ]
+)
