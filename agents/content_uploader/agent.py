@@ -17,8 +17,8 @@ async def create_agent():
 
     return Agent(
         name="content_uploader",
-        description="Processes PDFs/PPTs using Needle MCP",
+        description="Processes uploaded files with Needle MCP",
         model="gemini-1.5-flash-latest",
-        instruction="Extract text, generate embeddings, and store in vector DB",
+        instruction="Extract text from PDFs/PPTs and store embeddings",
         tools=tools
     ), exit_stack
