@@ -36,20 +36,33 @@
 
 ---
 
-## 🌐 Supported Languages
+## ⚙️ Project Flow: How It Works
 
-* English (en)
-* Hindi (hi)
-* Tamil (ta)
-* Telugu (te)
-* Bengali (bn)
-* Marathi (mr)
-* Gujarati (gu)
-* Kannada (kn)
-* Malayalam (ml)
-* Punjabi (pa)
-* Oriya (or)
-* Urdu (ur)
+1. **Upload a PDF Medical Report**
+   The user uploads a scanned or digital PDF. If text cannot be extracted, OCR is used as fallback.
+
+2. **Text Extraction and Chunking**
+   The PDF is parsed, and its content is split into overlapping text chunks.
+
+3. **Embedding Creation**
+   Each chunk is embedded using a Sentence Transformer (MiniLM) and stored in Pinecone.
+
+4. **User Asks a Question**
+   The user types a question about the report in any Indian language or lets the system auto-detect.
+
+5. **Query Embedding + Vector Search**
+   The user's question is embedded and matched against the most relevant chunks in Pinecone.
+
+6. **Gemini Response Generation**
+   The retrieved context and user query are sent to Gemini 2.5 for an answer in English.
+
+7. **Translation to Target Language**
+   If the selected language is not English, the response is translated using Google Translate API.
+
+8. **Response Delivery via Chatbot UI**
+   The user sees the final answer with language tag and chat history.
+
+> 🔹 Built with empathy for patients across linguistic borders.
 
 ---
 
@@ -94,24 +107,11 @@ Visit `http://localhost:7860` in your browser.
 
 ---
 
-## ⚖️ Disclaimer
-
-ChikitsaBhasha is **not a replacement for professional medical advice**. It is intended to assist with understanding — always consult a qualified doctor for health decisions.
-
----
-
 ## 📬 Author
 
 **N Punith Kumar**
-🏆 Winner of VIT Hackathon, IEEE Securathon
-📧 Email: [your\_email@example.com](mailto:your_email@example.com)
-🔗 GitHub: [@yourusername](https://github.com/yourusername)
-
----
-
-## 🪪 License
-
-This project is licensed under the MIT License.
+📧 Email: [punithkumarnimmala@gmail.com](mailto:punithkumarnimmala@gmail.com)
+🔗 GitHub: [@punithkumar-10](https://github.com/punithkumar-10)
 
 ---
 
@@ -123,31 +123,17 @@ This project is licensed under the MIT License.
 * [Tesseract OCR](https://github.com/tesseract-ocr)
 
 ---
+## 🌐 Supported Languages
 
-## ⚙️ Project Flow: How It Works
-
-1. **Upload a PDF Medical Report**
-   The user uploads a scanned or digital PDF. If text cannot be extracted, OCR is used as fallback.
-
-2. **Text Extraction and Chunking**
-   The PDF is parsed, and its content is split into overlapping text chunks.
-
-3. **Embedding Creation**
-   Each chunk is embedded using a Sentence Transformer (MiniLM) and stored in Pinecone.
-
-4. **User Asks a Question**
-   The user types a question about the report in any Indian language or lets the system auto-detect.
-
-5. **Query Embedding + Vector Search**
-   The user's question is embedded and matched against the most relevant chunks in Pinecone.
-
-6. **Gemini Response Generation**
-   The retrieved context and user query are sent to Gemini 2.5 for an answer in English.
-
-7. **Translation to Target Language**
-   If the selected language is not English, the response is translated using Google Translate API.
-
-8. **Response Delivery via Chatbot UI**
-   The user sees the final answer with language tag and chat history.
-
-> 🔹 Built with empathy for patients across linguistic borders.
+* English (en)
+* Hindi (hi)
+* Tamil (ta)
+* Telugu (te)
+* Bengali (bn)
+* Marathi (mr)
+* Gujarati (gu)
+* Kannada (kn)
+* Malayalam (ml)
+* Punjabi (pa)
+* Oriya (or)
+* Urdu (ur)
