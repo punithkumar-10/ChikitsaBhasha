@@ -1,4 +1,4 @@
-# 💺 ChikitsaBhasha — Medical Insights in Your Language 🇮🇳
+# ChikitsaBhasha — Medical Insights in Your Language 🇮🇳
 
 **ChikitsaBhasha** is an AI-powered multilingual medical assistant that explains complex medical reports in **simple, understandable language** — in your **preferred Indian language**. Built using **RAG (Retrieval-Augmented Generation)** and **Google Gemini**, this project aims to make healthcare communication more **inclusive, accessible, and personalized**.
 
