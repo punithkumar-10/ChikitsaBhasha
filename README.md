@@ -23,6 +23,16 @@
 
 ---
 
+## 🧠 Multi-Agent Architecture (Powered by Agno)
+
+ChikitsaBhasha now uses the [Agno](https://github.com/agno-agi/agno) multi-agent framework. Each supported language (English, Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Odia, Urdu) has its own dedicated AI agent, all orchestrated by a language router team. All agents use **Google Gemini** as the LLM backend.
+
+- **Language Router:** Automatically detects the user's language and routes the query to the correct agent.
+- **Language Agents:** Each agent is responsible for answering only in its assigned language, ensuring accurate and culturally relevant responses.
+- **Team Coordination:** The Agno Team routes, coordinates, and aggregates responses, providing a seamless multilingual experience.
+
+---
+
 ## 🧪 Example Use Cases
 
 > Upload a medical report and ask:
@@ -34,7 +44,7 @@
 
 ---
 
-## ⚙️ Project Flow: How It Works
+## ⚙️ Updated Project Flow
 
 1. **Upload a PDF Medical Report**
    The user uploads a scanned or digital PDF. If text cannot be extracted, OCR is used as fallback.
@@ -45,20 +55,17 @@
 3. **Embedding Creation**
    Each chunk is embedded using a Sentence Transformer (MiniLM) and stored in Pinecone.
 
-4. **User Asks a Question**
+4. **User Asks a Question (in any supported language)**
    The user types a question about the report in any Indian language or lets the system auto-detect.
 
-5. **Query Embedding + Vector Search**
+5. **Language Router (Agno Team) detects language and dispatches to the correct agent**
    The user's question is embedded and matched against the most relevant chunks in Pinecone.
 
-6. **Gemini Response Generation**
-   The retrieved context and user query are sent to Gemini 2.5 for an answer in English.
+6. **Relevant context is retrieved from Pinecone**
 
-7. **Translation to Target Language**
-   If the selected language is not English, the response is translated using Google Translate API.
+7. **Gemini LLM (via Agno) generates a response in the correct language**
 
-8. **Response Delivery via Chatbot UI**
-   The user sees the final answer with language tag and chat history.
+8. **Response is delivered via the chat interface**
 
 > 🔹 Built with empathy for patients across linguistic borders.
 
@@ -78,7 +85,7 @@
 ### 📦 Installation
 
 ```bash
-git clone https://github.com/yourusername/chikitsabhasha.git
+git clone https://github.com/punithkumar-10/chikitsabhasha.git
 cd chikitsabhasha
 pip install -r requirements.txt
 ```
@@ -93,15 +100,36 @@ Visit `http://localhost:7860` in your browser.
 
 ---
 
-## 🧰 Tech Stack
+## 🏗️ Tech Stack
 
-| Component                | Purpose                             |
-| ------------------------ | ----------------------------------- |
-| Gradio                   | UI framework for interaction        |
-| Gemini API (Google)      | LLM for answering questions         |
-| Pinecone                 | Vector DB for RAG context retrieval |
-| Sentence Transformers    | Embedding generation                |
-| PyPDF2 + OCR (Tesseract) | PDF text extraction                 |
+- **Agno**: Multi-agent orchestration and language routing
+- **Google Gemini**: LLM for all agents
+- **Gradio**: Chat UI
+- **Pinecone**: Vector database for semantic search
+- **Sentence Transformers**: Embedding generation
+- **PyPDF2, pdf2image, pytesseract**: PDF and OCR processing
+
+---
+
+## 🆕 How to Use (Quick Start)
+
+1. Install dependencies:
+   ```bash
+   uv pip install -r requirements.txt
+   ```
+2. Set your API keys in `.env` (see example in repo)
+3. Run the app:
+   ```bash
+   python app.py
+   ```
+4. Upload a medical report and chat in your preferred language!
+
+---
+
+## 📝 Notes
+- All language agents use Gemini via Agno (no OpenAI LLMs required)
+- The system is fully modular: add more languages by defining new agents in the code
+- For more on Agno, see [Agno Docs](https://github.com/agno-agi/agno-docs)
 
 ---
 
@@ -121,6 +149,7 @@ Visit `http://localhost:7860` in your browser.
 * [Tesseract OCR](https://github.com/tesseract-ocr)
 
 ---
+
 ## 🌐 Supported Languages
 
 * English (en)
