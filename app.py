@@ -15,7 +15,9 @@ from pdf2image import convert_from_bytes
 from PIL import Image
 import requests
 from dotenv import load_dotenv
-
+from agno.agent import Agent
+from agno.models.google.gemini import Gemini
+from agno.team.team import Team
 
 load_dotenv()
 # Load environment variables
@@ -307,6 +309,61 @@ Always remind users that this is not a substitute for professional medical advic
             return translated_response
         
         return response
+
+# AGNO multi-agent setup
+LANGUAGE_CODES = [
+    'en', 'hi', 'ta', 'te', 'bn', 'mr', 'gu', 'kn', 'ml', 'pa', 'or', 'ur'
+]
+LANGUAGE_NAMES = {
+    'en': 'English', 'hi': 'Hindi', 'ta': 'Tamil', 'te': 'Telugu', 'bn': 'Bengali',
+    'mr': 'Marathi', 'gu': 'Gujarati', 'kn': 'Kannada', 'ml': 'Malayalam',
+    'pa': 'Punjabi', 'or': 'Odia', 'ur': 'Urdu'
+}
+
+AGENT_INSTRUCTIONS = {
+    'en': "You are a medical report assistant. Respond ONLY in English.",
+    'hi': "आप एक चिकित्सा रिपोर्ट सहायक हैं। केवल हिंदी में उत्तर दें।",
+    'ta': "நீங்கள் ஒரு மருத்துவ அறிக்கை உதவியாளர். தமிழில் மட்டும் பதிலளிக்கவும்.",
+    'te': "మీరు వైద్య నివేదిక సహాయకుడు. కేవలం తెలుగులో మాత్రమే స్పందించండి.",
+    'bn': "আপনি একজন চিকিৎসা রিপোর্ট সহকারী। শুধুমাত্র বাংলায় উত্তর দিন।",
+    'mr': "आपण वैद्यकीय अहवाल सहाय्यक आहात. फक्त मराठीत उत्तर द्या.",
+    'gu': "તમે એક મેડિકલ રિપોર્ટ સહાયક છો. ફક્ત ગુજરાતીમાં જવાબ આપો.",
+    'kn': "ನೀವು ವೈದ್ಯಕೀಯ ವರದಿ ಸಹಾಯಕರು. ಕನ್ನಡದಲ್ಲಿ ಮಾತ್ರ ಉತ್ತರಿಸಿ.",
+    'ml': "നിങ്ങൾ ഒരു മെഡിക്കൽ റിപ്പോർട്ട് അസിസ്റ്റന്റാണ്. മലയാളത്തിൽ മാത്രം പ്രതികരിക്കുക.",
+    'pa': "ਤੁਸੀਂ ਇੱਕ ਮੈਡੀਕਲ ਰਿਪੋਰਟ ਸਹਾਇਕ ਹੋ। ਕੇਵਲ ਪੰਜਾਬੀ ਵਿੱਚ ਹੀ ਜਵਾਬ ਦਿਓ।",
+    'or': "ଆପଣ ଏକ ଚିକିତ୍ସା ରିପୋର୍ଟ ସହାୟକ। କେବଳ ଓଡ଼ିଆରେ ଉତ୍ତର ଦିଅନ୍ତୁ।",
+    'ur': "آپ ایک میڈیکل رپورٹ اسسٹنٹ ہیں۔ صرف اردو میں جواب دیں۔"
+}
+
+language_agents = []
+for code in LANGUAGE_CODES:
+    agent = Agent(
+        name=f"{LANGUAGE_NAMES[code]} Agent",
+        role=f"Medical report assistant for {LANGUAGE_NAMES[code]}",
+        model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+        instructions=[AGENT_INSTRUCTIONS[code]],
+        add_datetime_to_instructions=True,
+    )
+    language_agents.append(agent)
+
+multi_language_team = Team(
+    name="ChikitsaBhasha Multi-Language Team",
+    mode="route",
+    model=Gemini(id="gemini-2.5-flash-preview-04-17"),
+    members=language_agents,
+    show_tool_calls=True,
+    markdown=True,
+    instructions=[
+        "You are a language router that directs questions to the appropriate language agent.",
+        "If the user asks in a language whose agent is not a team member, respond in English with: 'I can only answer in the following languages: English, Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Odia, Urdu. Please ask your question in one of these languages.'",
+        "Always check the language of the user's input before routing to an agent.",
+        "For unsupported languages, respond in English with the above message.",
+    ],
+    show_members_responses=True,
+)
+
+def multi_agent_response(user_message):
+    return multi_language_team.run(user_message, stream=False).content
 
 # Gradio Interface State
 session_id = str(uuid.uuid4())

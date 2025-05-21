@@ -1,0 +1,15 @@
+streamlit
+PyPDF2
+Pillow
+pinecone
+groq
+sentence-transformers
+langdetect
+pytesseract
+pdf2image
+python-dotenv
+requests
+gradio
+google-generativeai
+agno
+
